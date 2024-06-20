@@ -12,6 +12,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import org.joml.Matrix4fStack;
 
 public class MenuWidget extends PressableWidget {
     public interface OnPress {
@@ -44,8 +45,8 @@ public class MenuWidget extends PressableWidget {
         Text message = getMessage();
         TextRenderer textRenderer = client.textRenderer;
         ItemRenderer renderer = client.getItemRenderer();
-        MatrixStack modelStack = RenderSystem.getModelViewStack();
-        modelStack.push();
+        Matrix4fStack modelStack = RenderSystem.getModelViewStack();
+        modelStack.pushMatrix();
 
         int stackCenterX = getX() + width / 2;
         int stackCenterY = getY() + height * 2 / 5;
@@ -55,7 +56,7 @@ public class MenuWidget extends PressableWidget {
         modelStack.scale(scaleX, scaleY, 1);
         RenderSystem.applyModelViewMatrix();
         GuiUtils.renderItemIdentity(graphics, itemStack, -8, -8);
-        modelStack.pop();
+        modelStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
 
         MatrixStack stack = graphics.getMatrices();
