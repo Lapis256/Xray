@@ -16,6 +16,9 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -51,14 +54,14 @@ public class ColorSelector extends XrayScreen {
             new NativeImage(NativeImage.Format.RGBA, PICKER_S_SIZE_X, PICKER_SIZE_Y, false));
     private static final NativeImageBackedTexture PICKER_IMAGE_HL = new NativeImageBackedTexture(
             new NativeImage(NativeImage.Format.RGBA, PICKER_HL_SIZE_X, PICKER_SIZE_Y, false));
-    private static final ItemStack RANDOM_PICKER = Util.make(new ItemStack(Items.POTION), ItemStack::getOrCreateNbt);
+    private static final ItemStack RANDOM_PICKER = Util.make(new ItemStack(Items.POTION), ItemStack::getComponentChanges);
     private static final int RANDOM_PICKER_FREQUENCY = 3600;
 
     private static ItemStack updatePicker() {
-        NbtCompound tag = RANDOM_PICKER.getNbt();
-        assert tag != null;
+        NbtCompound tag = new NbtCompound();
         tag.putInt("CustomPotionColor", GuiUtils.getTimeColor(RANDOM_PICKER_FREQUENCY, 100, 50));
-        RANDOM_PICKER.setNbt(tag);
+        NbtComponent component = NbtComponent.of(tag);
+        RANDOM_PICKER.set(DataComponentTypes.CUSTOM_DATA, component);
         return RANDOM_PICKER;
     }
 
