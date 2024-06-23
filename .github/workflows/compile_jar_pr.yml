@@ -13,7 +13,7 @@ jobs:
       - name: 🪛 Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 21
       - name: 🪛 Cache local Maven repository
         uses: actions/cache@v2
         with:

@@ -31,11 +31,14 @@ public class XrayAbstractModeConfig extends XrayScreen {
 
     @Override
     protected void init() {
+        final double blurValue = client.options.getMenuBackgroundBlurrinessValue();
+        client.options.getMenuBackgroundBlurriness().setValue(0d);
         addDrawableChild(
                 XrayButton.builder(Text.translatable("gui.done"), btn -> {
                     cfg.setName(nameBox.getText());
                     cfg.setColor(color);
                     client.setScreen(parent);
+                    client.options.getMenuBackgroundBlurriness().setValue(blurValue);
                 }).dimensions(width / 2 - 100, height / 2 + 24, 200, 20).build());
         addDrawableChild(
                 XrayButton.builder(Text.translatable("gui.cancel"), btn -> client.setScreen(parent)).dimensions(width / 2 - 100, height / 2 + 48, 200, 20).build());
@@ -55,13 +58,12 @@ public class XrayAbstractModeConfig extends XrayScreen {
 
     @Override
     public void tick() {
-        nameBox.tick();
         super.tick();
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+        renderInGameBackground(context);
         nameBox.render(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
     }
