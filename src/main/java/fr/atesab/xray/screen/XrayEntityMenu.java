@@ -293,4 +293,9 @@ public class XrayEntityMenu extends Screen {
         }
         return false;
     }
+
+    @Override
+    public void applyBlur(float delta){
+
+    }
 }
