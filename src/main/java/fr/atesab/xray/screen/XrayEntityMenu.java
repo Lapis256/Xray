@@ -26,10 +26,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class XrayEntityMenu extends XrayScreen {
     public record EntityUnion(EntityType<?> type, BlockEntityType<?> blockType, String text) implements EnumElement {
         EntityUnion(EntityType<?> type) {
-            this(type, null, computeText(type, null));
+            this(type, null, computeText(type));
         }
         EntityUnion(BlockEntityType<?> blockType) {
-            this(null, blockType, computeText(null, blockType));
+            this(null, blockType, computeText(blockType));
         }
 
         @Override
@@ -43,19 +43,17 @@ public class XrayEntityMenu extends XrayScreen {
 
         @Override
         public Component getTitle() {
-            return Component.translatable(text());
+            return Component.literal(text());
         }
 
-        static String computeText(EntityType<?> type, BlockEntityType<?> blockType) {
-            if (type != null) {
-                return type.getDescriptionId();
-            } else {
-                ResourceLocation id = ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(blockType);
-                if (id == null) {
-                    return blockType.getClass().getCanonicalName();
-                }
-                return id.toLanguageKey();
-            }
+        static String computeText(EntityType<?> type) {
+            ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
+            return id == null ? type.getClass().getCanonicalName() : id.toString();
+        }
+
+        static String computeText(BlockEntityType<?> type) {
+            ResourceLocation id = ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(type);
+            return id == null ? type.getClass().getCanonicalName() : id.toString();
         }
     }
     private static final Component ADD = Component.literal("+").withStyle(ChatFormatting.GREEN);
@@ -257,9 +255,9 @@ public class XrayEntityMenu extends XrayScreen {
             int y = top + (i / elementsX) * 18;
             if (mouseX >= x && mouseX <= x + 18 && mouseY >= y && mouseY <= y + 18) {
                 if (button == 0) { // left click: replace
-                    minecraft.setScreen(new EntitySelector(this) {
+                    minecraft.setScreen(new EntitySelectorS(this) {
                         @Override
-                        protected void select(EntityUnion selection) {
+                        protected void save(XrayEntityMenu.EntityUnion selection) {
                             int index = config.indexOf(b);
                             if (index == -1) { // wtf?
                                 config.add(selection);
@@ -269,6 +267,18 @@ public class XrayEntityMenu extends XrayScreen {
                             updateSearch();
                         }
                     });
+//                    minecraft.setScreen(new EntitySelector(this) {
+//                        @Override
+//                        protected void select(XrayEntityMenu.EntityUnion selection) {
+//                            int index = config.indexOf(b);
+//                            if (index == -1) { // wtf?
+//                                config.add(selection);
+//                            } else {
+//                                config.set(index, selection);
+//                            }
+//                            updateSearch();
+//                        }
+//                    });
                     return true;
                 }
                 if (button == 1) { // right click: delete
@@ -283,13 +293,20 @@ public class XrayEntityMenu extends XrayScreen {
         int y = top + (i / elementsX) * 18;
         if (button == 0 && mouseX >= x && mouseX <= x + 18 && mouseY >= y && mouseY <= y + 18) {
             // add
-            minecraft.setScreen(new EntitySelector(this) {
+            minecraft.setScreen(new EntitySelectorS(this) {
                 @Override
-                protected void select(EntityUnion selection) {
+                protected void save(XrayEntityMenu.EntityUnion selection) {
                     config.add(selection);
                     updateSearch();
                 }
             });
+//            minecraft.setScreen(new EntitySelector(this) {
+//                @Override
+//                protected void select(XrayEntityMenu.EntityUnion selection) {
+//                    config.add(selection);
+//                    updateSearch();
+//                }
+//            });
             return true;
         }
         return false;

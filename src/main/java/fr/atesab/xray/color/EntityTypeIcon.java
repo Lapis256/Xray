@@ -12,6 +12,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public record EntityTypeIcon(EntityType<?> entity, ItemStack icon) {
@@ -76,7 +77,7 @@ public record EntityTypeIcon(EntityType<?> entity, ItemStack icon) {
         if (icon != null)
             return icon;
 
-        SpawnEggItem egg = SpawnEggItem.byId(type);
+        SpawnEggItem egg = ForgeSpawnEggItem.fromEntityType(type);
 
         if (egg != null)
             return new ItemStack(egg);

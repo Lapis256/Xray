@@ -15,9 +15,11 @@ import fr.atesab.xray.utils.KeyData;
 import fr.atesab.xray.utils.XrayUtils;
 import fr.atesab.xray.widget.EntityConfigWidget;
 import fr.atesab.xray.widget.XrayButton;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public abstract class XrayESPModesConfig extends PagedScreen<ESPConfig> {
     private class PagedESPMode extends PagedElement<ESPConfig> {
@@ -36,7 +38,11 @@ public abstract class XrayESPModesConfig extends PagedScreen<ESPConfig> {
 
         @Override
         public void init() {
-            int x = width / 2 - 125;
+            int x = width / 2 - 230;
+            addSubWidget(new XrayButton(x, 0, 71, 20, Component.literal(cfg.getModeName()).withStyle(Style.EMPTY.withColor(cfg.getColor())), btn -> {
+                minecraft.setScreen(new XrayAbstractModeConfig(XrayESPModesConfig.this, cfg));
+            }));
+            x += 75;
             entities = addSubWidget(new EntityConfigWidget(x, 0, 115, 20, cfg, XrayESPModesConfig.this));
             x += 119;
             addSubWidget(new XrayButton(x, 0, 56, 20, KeyData.getName(cfg.getKey()), btn -> {
@@ -44,6 +50,11 @@ public abstract class XrayESPModesConfig extends PagedScreen<ESPConfig> {
                     cfg.setKey(oKey);
                     btn.setMessage(KeyData.getName(cfg.getKey()));
                 }));
+            }));
+            x += 60;
+            addSubWidget(new XrayButton(x, 0, 56, 20, Component.literal(cfg.isEnabled() ? "Enable" : "Disable").withStyle(cfg.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED), btn -> {
+                cfg.setEnabled(!cfg.isEnabled());
+                btn.setMessage(Component.literal(cfg.isEnabled() ? "Enable" : "Disable").withStyle(cfg.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED));
             }));
             x += 60;
             addSubWidget(
@@ -85,26 +96,26 @@ public abstract class XrayESPModesConfig extends PagedScreen<ESPConfig> {
             entities.setDeltaY(delta);
         }
 
-        @Override
-        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            textHover = XrayUtils.isHover(mouseX, mouseY, width / 2 - 200, 0, width / 2 - 125 - 4, 20);
-            graphics.fill(width / 2 - 200, 0, width / 2 - 125 - 4, 20, textHover ? 0x33ffaa00 : 0x33ffffff);
-            int w = font.width(cfg.getModeName());
-            graphics.drawString(font, cfg.getModeName(), width / 2 - (200 - 125 - 4) / 2 - 125 - 4 - w / 2,
-                    10 - font.lineHeight / 2,
-                    cfg.getColor());
-            super.render(graphics, mouseX, mouseY, delta);
-        }
-
-        @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (textHover) {
-                playDownSound();
-                minecraft.setScreen(new XrayAbstractModeConfig(XrayESPModesConfig.this, cfg));
-                return true;
-            }
-            return super.mouseClicked(mouseX, mouseY, button);
-        }
+//        @Override
+//        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+//            textHover = XrayUtils.isHover(mouseX, mouseY, width / 2 - 200, 0, width / 2 - 125 - 4, 20);
+//            graphics.fill(width / 2 - 200, 0, width / 2 - 125 - 4, 20, textHover ? 0x33ffaa00 : 0x33ffffff);
+//            int w = font.width(cfg.getModeName());
+//            graphics.drawString(font, cfg.getModeName(), width / 2 - (200 - 125 - 4) / 2 - 125 - 4 - w / 2,
+//                    10 - font.lineHeight / 2,
+//                    cfg.getColor());
+//            super.render(graphics, mouseX, mouseY, delta);
+//        }
+//
+//        @Override
+//        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+//            if (textHover) {
+//                playDownSound();
+//                minecraft.setScreen(new XrayAbstractModeConfig(XrayESPModesConfig.this, cfg));
+//                return true;
+//            }
+//            return super.mouseClicked(mouseX, mouseY, button);
+//        }
 
         @Override
         public ESPConfig save() {

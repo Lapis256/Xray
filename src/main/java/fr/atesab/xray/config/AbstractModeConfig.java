@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 
 public abstract class AbstractModeConfig implements IColorObject {
     private static final AtomicInteger IDS = new AtomicInteger();
+
     private boolean enabled = false;
     @Expose
     private int key;

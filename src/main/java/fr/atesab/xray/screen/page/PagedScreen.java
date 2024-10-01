@@ -215,7 +215,7 @@ public abstract class PagedScreen<E> extends XrayScreen {
             iterator.remove();
     }
 
-    private void computePages(boolean updateDelta) {
+    protected void computePages(boolean updateDelta) {
         elements.removeUpdated();
         elementByPage = (height - 24 - 30) / elementHeight;
         // set a minimum of 1 page if elements.size() == 0

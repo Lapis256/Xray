@@ -16,9 +16,11 @@ import fr.atesab.xray.utils.XrayUtils;
 import fr.atesab.xray.view.ViewMode;
 import fr.atesab.xray.widget.BlockConfigWidget;
 import fr.atesab.xray.widget.XrayButton;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public abstract class XrayBlockModesConfig extends PagedScreen<BlockConfig> {
     private class PagedBlockMode extends PagedElement<BlockConfig> {
@@ -37,7 +39,12 @@ public abstract class XrayBlockModesConfig extends PagedScreen<BlockConfig> {
 
         @Override
         public void init() {
-            int x = width / 2 - 125;
+//            int x = width / 2 - 125;
+            int x = width / 2 - 230;
+            addSubWidget(new XrayButton(x, 0, 71, 20, Component.literal(cfg.getModeName()).withStyle(Style.EMPTY.withColor(cfg.getColor())), btn -> {
+                minecraft.setScreen(new XrayAbstractModeConfig(XrayBlockModesConfig.this, cfg));
+            }));
+            x += 75;
             blocks = addSubWidget(new BlockConfigWidget(x, 0, 125, 20, cfg, XrayBlockModesConfig.this));
             x += 129;
             addSubWidget(new XrayButton(x, 0, 56, 20, KeyData.getName(cfg.getKey()), btn -> {
@@ -45,6 +52,11 @@ public abstract class XrayBlockModesConfig extends PagedScreen<BlockConfig> {
                     cfg.setKey(oKey);
                     btn.setMessage(KeyData.getName(cfg.getKey()));
                 }));
+            }));
+            x += 60;
+            addSubWidget(new XrayButton(x, 0, 56, 20, Component.literal(cfg.isEnabled() ? "Enable" : "Disable").withStyle(cfg.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED), btn -> {
+                cfg.setEnabled(!cfg.isEnabled());
+                btn.setMessage(Component.literal(cfg.isEnabled() ? "Enable" : "Disable").withStyle(cfg.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED));
             }));
             x += 60;
             addSubWidget(new XrayButton(x, 0, 64, 20, cfg.getViewMode().getTitle(), btn -> {
@@ -93,26 +105,26 @@ public abstract class XrayBlockModesConfig extends PagedScreen<BlockConfig> {
             blocks.setDeltaY(delta);
         }
 
-        @Override
-        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            textHover = XrayUtils.isHover(mouseX, mouseY, width / 2 - 200, 0, width / 2 - 125 - 4, 20);
-            graphics.fill(width / 2 - 200, 0, width / 2 - 125 - 4, 20, textHover ? 0x33ffaa00 : 0x33ffffff);
-            int w = font.width(cfg.getModeName());
-            graphics.drawString(font, cfg.getModeName(), width / 2 - (200 - 125 - 4) / 2 - 125 - 4 - w / 2,
-                    10 - font.lineHeight / 2,
-                    cfg.getColor());
-            super.render(graphics, mouseX, mouseY, delta);
-        }
-
-        @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (textHover) {
-                playDownSound();
-                minecraft.setScreen(new XrayAbstractModeConfig(XrayBlockModesConfig.this, cfg));
-                return true;
-            }
-            return super.mouseClicked(mouseX, mouseY, button);
-        }
+//        @Override
+//        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+//            textHover = XrayUtils.isHover(mouseX, mouseY, width / 2 - 200, 0, width / 2 - 125 - 4, 20);
+//            graphics.fill(width / 2 - 200, 0, width / 2 - 125 - 4, 20, textHover ? 0x33ffaa00 : 0x33ffffff);
+//            int w = font.width(cfg.getModeName());
+//            graphics.drawString(font, cfg.getModeName(), width / 2 - (200 - 125 - 4) / 2 - 125 - 4 - w / 2,
+//                    10 - font.lineHeight / 2,
+//                    cfg.getColor());
+//            super.render(graphics, mouseX, mouseY, delta);
+//        }
+//
+//        @Override
+//        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+//            if (textHover) {
+//                playDownSound();
+//                minecraft.setScreen(new XrayAbstractModeConfig(XrayBlockModesConfig.this, cfg));
+//                return true;
+//            }
+//            return super.mouseClicked(mouseX, mouseY, button);
+//        }
 
         @Override
         public BlockConfig save() {

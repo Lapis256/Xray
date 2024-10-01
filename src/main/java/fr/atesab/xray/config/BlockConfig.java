@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockConfig extends AbstractModeConfig implements SideRenderer, Cloneable {
+public class BlockConfig extends AbstractModeConfig implements Cloneable {
     public enum Template implements EnumElement {
         // @formatter:off
         BLANK("x13.mod.template.blank", new ItemStack(Items.PAPER), new BlockConfig()),
@@ -204,18 +204,25 @@ public class BlockConfig extends AbstractModeConfig implements SideRenderer, Clo
         return blocks;
     }
 
-    @Override
-    public void shouldSideBeRendered(BlockState adjacentState, BlockGetter blockState, BlockPos blockAccess,
-            Direction pos, CallbackInfoReturnable<Boolean> ci) {
-        if (!isEnabled())
-            return;
-
-        String name = Objects.requireNonNullElse(ForgeRegistries.BLOCKS.getKey(adjacentState.getBlock()), "").toString();
-        boolean present = blocks.contains(name);
-        boolean shouldRender = viewMode.getViewer().shouldRenderSide(present, adjacentState, blockState,
-                blockAccess, pos);
-        ci.setReturnValue(shouldRender);
+    public boolean isVisible(BlockState state) {
+        var contains = blocks.contains(Objects.requireNonNullElse(ForgeRegistries.BLOCKS.getKey(state.getBlock()), "").toString());
+        //        if(contains)
+//            XrayMain.log.info("BlockConfig.isVisible: {} contains: {}, visible: {}", state, contains, r);
+        return viewMode.getViewer().shouldRenderSide(contains, state);
     }
+
+//    @Override
+//    public void shouldSideBeRendered(BlockState adjacentState, BlockGetter blockState, BlockPos blockAccess,
+//            Direction pos, CallbackInfoReturnable<Boolean> ci) {
+//        if (!isEnabled())
+//            return;
+//
+//        String name = Objects.requireNonNullElse(ForgeRegistries.BLOCKS.getKey(adjacentState.getBlock()), "").toString();
+//        boolean present = blocks.contains(name);
+//        boolean shouldRender = viewMode.getViewer().shouldRenderSide(present, adjacentState, blockState,
+//                blockAccess, pos);
+//        ci.setReturnValue(shouldRender);
+//    }
 
     @Override
     public void setEnabled(boolean enabled) {

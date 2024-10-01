@@ -1,17 +1,21 @@
 package fr.atesab.xray.color;
 
 
+import fr.atesab.xray.mixins.AccessorBlockEntityType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public record BlockEntityTypeIcon(BlockEntityType<?> entity, ItemStack icon) {
 
@@ -69,6 +73,7 @@ public record BlockEntityTypeIcon(BlockEntityType<?> entity, ItemStack icon) {
     }
 
     public static ItemStack getIcon(BlockEntityType<?> type) {
+
         ResourceLocation id = ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(type);
         if (id == null) {
             return DEFAULT_ICON;
@@ -80,6 +85,8 @@ public record BlockEntityTypeIcon(BlockEntityType<?> entity, ItemStack icon) {
             return icon;
         }
 
-        return DEFAULT_ICON;
+        return ((AccessorBlockEntityType) type).getValidBlocks().stream().findFirst()
+                .map(ItemStack::new)
+                .orElse(DEFAULT_ICON);
     }
 }

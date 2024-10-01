@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public abstract class EnumSelector<E extends EnumElement> extends PagedScreen<E> {
-
     private class EnumSelectionElement extends PagedElement<E> {
         private final E e;
         private LongItemWidget btn;
