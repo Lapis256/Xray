@@ -19,11 +19,6 @@ import java.util.List;
 public class MixinSimpleBakedModel {
     @Inject(at = @At("HEAD"), method = "getQuads", cancellable = true)
     private void getQuads(@Nullable BlockState state, Direction par2, RandomSource par3, CallbackInfoReturnable<List<BakedQuad>> cir) {
-//        if (state == null) {
-//            return;
-//        }
-//
-//        XrayMain.log.info("getQuads state: {}, visible: {}", state, XrayMain.getMod().isBlockInvisible(state));
         if (state != null && XrayMain.getMod().isBlockInvisible(state)) {
             cir.setReturnValue(List.of());
         }

@@ -4,8 +4,7 @@
   "package": "fr.atesab.xray.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AccessorBlockEntityType",
-    "sodium.MixinBlockOcclusionCache"
+    "AccessorBlockEntityType"
   ],
   "refmap": "mixins.atianxray.refmap.json",
   "client": [
@@ -15,7 +14,7 @@
     "MixinLiquidBlockRenderer",
     "MixinMinecraftClient",
     "MixinSimpleBakedModel",
-    "MixinVisGraph",
+    "sodium.MixinBlockOcclusionCache",
     "sodium.MixinDefaultFluidRenderer"
   ],
   "injectors": {

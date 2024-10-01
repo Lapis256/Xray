@@ -206,19 +206,6 @@ public class XrayMain {
         return getConfig().getBlockConfigs().stream().anyMatch(AbstractModeConfig::isEnabled);
     }
 
-//    public int shouldSideBeRendered(BlockState adjacentState, BlockGetter blockState, BlockPos blockAccess,
-//                                    Direction pos, CallbackInfoReturnable<Boolean> ci) {
-//        if (ci == null)
-//            ci = new CallbackInfoReturnable<>("shouldSideBeRendered", true);
-//
-//        for (BlockConfig mode : getConfig().getBlockConfigs()) {
-//            mode.shouldSideBeRendered(adjacentState, blockState, blockAccess, pos, ci);
-//        }
-//        if (ci.isCancelled())
-//            return ci.getReturnValue().booleanValue() ? 0 : 1;
-//        return 2;
-//    }
-
     public boolean isBlockInvisible(BlockState state) {
         var filtered = getConfig().getBlockConfigs().stream().filter(BlockConfig::isEnabled).toList();
         if (filtered.isEmpty()) {
@@ -362,15 +349,6 @@ public class XrayMain {
                 config.getLocationConfig(),
                 render
         );
-    }
-
-    @SubscribeEvent
-    public void onUseOnBlock(PlayerInteractEvent.RightClickBlock ev) {
-        var pos = ev.getPos();
-        var state = ev.getLevel().getBlockState(pos);
-//        var state = Blocks.WATER.defaultBlockState();
-        var inv = isBlockInvisible(state);
-        log.info("onUseOnBlock state: {}, invisible: {}, {}", state, !BlockConfig.Template.XRAY.create().isVisible(state), inv);
     }
 
     /**

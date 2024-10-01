@@ -17,15 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class MixinBlock {
     @Inject(at = @At("HEAD"), method = "shouldRenderFace(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;)Z", cancellable = true)
     private static void shouldRenderFace(BlockState state, BlockGetter reader, BlockPos pos, Direction face, BlockPos blockPosaaa, CallbackInfoReturnable<Boolean> cir) {
-//        var inv = XrayMain.getMod().isBlockInvisible(state);
         if(XrayMain.getMod().isXrayEnabled()) {
-//            XrayMain.log.info("shouldRenderFace state: {}, invisible: {}", state, inv);
             cir.setReturnValue(!XrayMain.getMod().isBlockInvisible(state));
         }
-
-//        if(XrayMain.getMod().isBlockInvisible(state)) {
-//            cir.setReturnValue(false);
-//        }
-//        XrayMain.getMod().shouldSideBeRendered(state, reader, pos, face, ci);
     }
 }
